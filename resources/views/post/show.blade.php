@@ -15,7 +15,7 @@
 
                 <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}<a href="#">Kassandra Ankunding2</a></p>
 
-                <p><p>{{$post->content}}<img src="/image/30146-106.jpg" alt="63" style="max-width: 100%;"></p><p><br></p></p>
+                <p>{!! $post->content !!}</p>
                 <div>
                     <a href="/posts/{{$post->id}}/zan" type="button" class="btn btn-primary btn-lg">赞</a>
 

@@ -28,23 +28,43 @@ class PostController extends Controller
     }
     //
     public function store()
-    {
+    {   //表单提交三步走  验证 逻辑 渲染
+        $this->validate(request(),[
+            'title'=>'required|string|max:64|min:5',
+            'content' => 'required|string',
+        ]);
         Post::create(request(['title','content']));
         return redirect("/posts");
     }
     //edit post
-    public function edit()
+    public function edit(Post $post)
     {
-        return view("post/edit");
+
+
+        return view("post/edit",compact('post'));
     }
     //update post
-    public function update()
+    public function update(Post $post)
     {
-
+        $this->validate(request(),[
+            'title'=>'required|string|max:64|min:5',
+            'content' => 'required|string',
+        ]);
+        $post->title = request('title');
+        $post->content = request('content');
+        $post->save();
+        return redirect("/posts/{$post->id}");
     }
     //delete post
-    public function delete()
+    public function delete(Post $post)
     {
-
+        $post->delete();
+        return redirect('/posts');
+    }
+    //upload image;
+    public function imageUpload(Request $request)
+    {
+        $path=$request->file('wangEditorH5File')->storePublicly(md5(time()));
+        return asset('storage/'.$path);
     }
 }

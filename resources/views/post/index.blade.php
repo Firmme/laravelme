@@ -39,7 +39,7 @@
                     <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}
                          by <a href="/user/5">Kassandra Ankunding2</a></p>
 
-                    <p>{{str_limit($post->content,100,"...[查看全文]")}}
+                    {!! str_limit($post->content,200,"...[查看全文]") !!}<span></span>
                     <p class="blog-post-meta">赞 0  | 评论 0</p>
                 </div>
                 @endforeach
