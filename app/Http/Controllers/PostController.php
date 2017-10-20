@@ -33,7 +33,12 @@ class PostController extends Controller
             'title'=>'required|string|max:64|min:5',
             'content' => 'required|string',
         ]);
-        Post::create(request(['title','content']));
+
+
+        $user_id = \Auth::id();
+        $params = array_merge(request(['title','content']),compact('user_id'));
+
+        Post::create($params);
         return redirect("/posts");
     }
     //edit post
@@ -50,6 +55,10 @@ class PostController extends Controller
             'title'=>'required|string|max:64|min:5',
             'content' => 'required|string',
         ]);
+
+        $this->authorize('update',$post);  //验证授权
+
+
         $post->title = request('title');
         $post->content = request('content');
         $post->save();
@@ -58,6 +67,9 @@ class PostController extends Controller
     //delete post
     public function delete(Post $post)
     {
+        $this->authorize('delete',$post);
+
+
         $post->delete();
         return redirect('/posts');
     }
