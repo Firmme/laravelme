@@ -2,7 +2,6 @@
 
 @section("content")
         <div class="col-sm-8 blog-main">
-            <div>
                 <div id="carousel-example" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <ol class="carousel-indicators">
@@ -30,7 +29,6 @@
                     <a class="right carousel-control" href="#carousel-example" data-slide="next">
                         <span class="glyphicon glyphicon-chevron-right"></span></a>
                 </div>
-            </div>
             <div style="height: 20px;"></div>
             <div>
                 @foreach($posts as $post)
@@ -39,12 +37,12 @@
                     <p class="blog-post-meta">{{$post->created_at->toFormattedDateString()}}
                          by <a href="/user/5">{{$post->user->name}}</a></p>
 
-                    {!! str_limit($post->content,200,"...[查看全文]") !!}<span></span>
-                    <p class="blog-post-meta">赞 0  | 评论 0</p>
+                    {!! str_limit($post->content,5000,"...[查看全文]") !!}<span></span>
+                    <p class="blog-post-meta">赞 {{$post->zans_count}}| 评论 {{$post->comments_count}}</p>
                 </div>
                 @endforeach
-{{$posts->links()}}
+                {{$posts->links()}}
 
             </div><!-- /.blog-main -->
         </div>
-@endsection
+    @endsection

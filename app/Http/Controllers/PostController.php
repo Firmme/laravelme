@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\Comment;
+use App\Zan;
 
 class PostController extends Controller
 {
     //list
     public function index()
     {
-        $posts = Post::orderBy('created_at','desc')->paginate(6);
+        $posts = Post::orderBy('created_at','desc')->withCount(['comments','zans'])->paginate(6);
 
 
         return view("post/index",compact("posts"));
@@ -18,6 +20,7 @@ class PostController extends Controller
     //post
     public function show(Post $post)
     {
+        $post->load('comments');
         return view("post/show",compact('post'));
     }
     //new post
@@ -78,5 +81,42 @@ class PostController extends Controller
     {
         $path=$request->file('wangEditorH5File')->storePublicly(md5(time()));
         return asset('storage/'.$path);
+    }
+    public function comment(Post $post)
+    {
+        $this->validate(request(),[
+            'content'=>'required|min:3',
+        ]);
+        $comment = new Comment();
+        $comment->user_id = \Auth::id();
+        $comment->content = request('content');
+        $post->comments()->save($comment);
+        return back();
+    }
+    public function zan(Post $post)
+    {
+        $param = [
+        'user_id' => \Auth::id(),
+        'post_id' => $post->id,
+        ];
+        Zan::firstOrCreate($param);
+        return back();
+    }
+
+    public function unzan(Post $post)
+    {
+        $post->zan(\Auth::id())->delete();
+        return back();
+    }
+    //搜索结果页
+    public function search()
+    {
+        $this->validate(request(),[
+            'query' => 'required',
+        ]);
+
+        $query = request('query');
+        $posts = \App\Post::search($query)->paginate(2);
+        return view('/post/search',compact('posts','query'));
     }
 }

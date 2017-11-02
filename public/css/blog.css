@@ -1,6 +1,9 @@
 /*
  * Globals
  */
+.blog-post{
+    overflow:hidden;
+}
 
 body {
     font-family: Georgia, "Times New Roman", Times, serif;
